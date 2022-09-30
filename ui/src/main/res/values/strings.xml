@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">ブラックジャックSBJ</string>
+
+    <string name="top_overview">コンピューター上のディーラーさんと、プレーヤーのあなたがブラックジャックで対戦します。</string>
+    <string name="top_btn_explanation">ルール説明</string>
+
+    <string name="explanation_rule">「ルール」\n１．コンピューター上のディーラさんが自動で、2枚を手札に加え、合計数でヒット(再度手札を引く)かスタンド(確定)か選択する。\n\n２．プレイヤーのあなたは、配られた2枚を手札に加え、合計値を確認する。\n\n３．２の合計値によって、プレイヤーのあなたはヒットかスタンドを選択する。\n\n４．ヒットの場合は、配られた1枚を手札に加え、合計値で再びヒットかスタンドを選択する。スタンドの場合は、その合計値でディーラさんと勝負する。\n※プレイヤーのあなたがヒットで1を引いた場合、値の扱いを1か11どちらかに選択できる。\n\n５．プレイヤーのあなたの合計値が21か、ディーラーさんがバーストするか、ディーラーさんより21に近い数だった場合、プレイヤーのあなたが勝ちとなる。それ以外はあなたの負けとなる。ただ、バーストなしで同じ数字の場合は、引き分けになる。</string>
+    <string name="explanation_btn_fight">ゲーム開始</string>
+
+    <string name="player_situation1">ディーラさんのターンが終わりました。あなたのターンです。</string>
+    <string name="player_situation2">あなたの現在の合計値：</string>
+    <string name="player_situation2_2">あなたの現在の手札：</string>
+    <string name="player_situation3">あなたはヒットかスタンドか選択できます。</string>
+    <string name="player_btn_hit">ヒット</string>
+    <string name="player_btn_stand">スタンド</string>
+    <string name="player_selection_hit">あなたはヒットを選択しました。</string>
+    <string name="player_dialog_title">1が出ました。どちらの扱いにするか選択してください。</string>
+    <string name="player_dialog_yes">はい</string>
+
+    <string name="result_situation1">【結果発表】</string>
+    <string name="result_situation_winner">勝者：</string>
+    <string name="result_situation_player">プレイヤーのあなたの合計値：</string>
+    <string name="result_situation_dealer">ディーラーさんの合計値：</string>
+    <string name="result_btn_again">再度プレイ</string>
+    <string name="result_btn_top">トップ</string>
+</resources>

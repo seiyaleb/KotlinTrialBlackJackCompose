@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/topFragment">
+
+    <fragment
+        android:id="@+id/topFragment"
+        android:name="com.ui.fragment.TopFragment"
+        android:label="fragment_top"
+        tools:layout="@layout/fragment_top" >
+        <action
+            android:id="@+id/action_topFragment_to_explanationFragment"
+            app:destination="@id/explanationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/explanationFragment"
+        android:name="com.ui.fragment.ExplanationFragment"
+        android:label="fragment_explanation"
+        tools:layout="@layout/fragment_explanation" >
+        <action
+            android:id="@+id/action_explanationFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.ui.fragment.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player" >
+        <action
+            android:id="@+id/action_playerFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.ui.fragment.ResultFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result" >
+        <argument
+            android:name="totalDealer"
+            app:argType="integer" />
+        <argument
+            android:name="totalPlayer"
+            app:argType="integer" />
+    </fragment>
+</navigation>
