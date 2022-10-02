@@ -2,6 +2,7 @@ package com.kotlintrialblackjack
 
 import androidx.core.os.bundleOf
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
@@ -13,7 +14,11 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ui.R
 import com.ui.activity.MainActivity
+import com.ui.fragment.PlayerFragment
+import com.ui.fragment.PlayerFragmentDirections
 import com.ui.fragment.ResultFragment
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -72,7 +77,6 @@ class ExampleInstrumentedTest {
         onView(withId(R.id.explanation_btn_fight)).perform(click())
         onView(withId(R.id.player_btn_stand)).perform(click())
         pressBack()
-        onView(withId(R.id.top)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -80,22 +84,24 @@ class ExampleInstrumentedTest {
 
         val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
 
-        //乱数を生成し、Bundleに埋め込む
-        val randomPlayer = (4..31).random()
-        val randomDealer = (18..27).random()
-        val bundle = bundleOf("totalPlayer" to randomPlayer,"totalDealer" to randomDealer)
+        //PlayerFragmentにTestNavHostControllerを割り当て
+        launchFragmentInContainer<PlayerFragment>().onFragment { playFragment ->
+            navController.setGraph(R.navigation.nav_graph)
+            navController.setCurrentDestination(R.id.playerFragment)
+            Navigation.setViewNavController(playFragment.requireView(), navController)
+        }
+
+        //スタンドボタンをタップ
+        onView(withId(R.id.player_btn_stand)).perform(click())
 
         //引数を受け取り、ResultFragment起動
-        //ResultFragmentにTestNavHostを割り当て
-        launchFragmentInContainer<ResultFragment>(bundle).onFragment { resultFragment ->
-                navController.setGraph(R.navigation.nav_graph)
-                Navigation.setViewNavController(resultFragment.requireView(), navController)
-        }
+        val currentDestinationArg = navController.backStack.last().arguments
+        launchFragmentInContainer<ResultFragment>(currentDestinationArg)
 
         //TextViewのテキストを検証
         onView(withId(R.id.result_tv_player)).check(matches(
-            withText("プレイヤーのあなたの合計値：${bundle.getInt("totalPlayer")}")))
+            withText("プレイヤーのあなたの合計値：${currentDestinationArg?.getInt("totalPlayer")}")))
         onView(withId(R.id.result_tv_dealer)).check(matches(
-            withText("ディーラーさんの合計値：${bundle.getInt("totalDealer")}")))
+            withText("ディーラーさんの合計値：${currentDestinationArg?.getInt("totalDealer")}")))
     }
 }
