@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../.gradle/caches/transforms-3/c579f02153a220eea3b4323dbc4d63f2/transformed/leakcanary-android-core-2.9.1/res/layout/leak_canary_heap_analysis_failure_screen.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.206" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1773049645390071" />
         <entry key="app/src/main/res/layout/fragment_explanation.xml" value="0.335" />

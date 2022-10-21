@@ -1,8 +1,6 @@
 package com.kotlintrialblackjack
 
-import androidx.core.os.bundleOf
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
@@ -15,10 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ui.R
 import com.ui.activity.MainActivity
 import com.ui.fragment.PlayerFragment
-import com.ui.fragment.PlayerFragmentDirections
 import com.ui.fragment.ResultFragment
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
