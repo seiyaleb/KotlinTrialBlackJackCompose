@@ -1,102 +1,137 @@
 package com.kotlintrialblackjack
 
-import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.navigation.Navigation
-import androidx.navigation.testing.TestNavHostController
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.ui.R
-import com.ui.activity.MainActivity
-import com.ui.fragment.PlayerFragment
-import com.ui.fragment.ResultFragment
+import android.content.Context
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.lifecycle.ViewModelProvider
+import androidx.test.platform.app.InstrumentationRegistry
+import com.ui.compose.NavigationTop
+import com.ui.compose.Player
+import com.ui.viewmodel.TotalViewModel
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-@RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
 
     @get:Rule
-    val activityScenarioRule: ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
+    val composeTestRule = createComposeRule()
 
-    @Test
-    fun navigationTransitionOnBtn() {
+    private lateinit var context:Context
+    private lateinit var viewModel:TotalViewModel
 
-        //ルール説明ボタンをタップし、遷移状態を検証
-        onView(withId(R.id.top_btn_explnation)).perform(click())
-        onView(withId(R.id.explanation)).check(matches(isDisplayed()))
-
-        //ゲーム開始ボタンをタップし、遷移状態を検証
-        onView(withId(R.id.explanation_btn_fight)).perform(click())
-        onView(withId(R.id.player)).check(matches(isDisplayed()))
-
-        //スタンドボタンをタップし、遷移状態を検証
-        onView(withId(R.id.player_btn_stand)).perform(click())
-        onView(withId(R.id.result)).check(matches(isDisplayed()))
-
-        //再度プレイボタンをタップし、遷移状態を検証
-        onView(withId(R.id.result_btn_again)).perform(click())
-        onView(withId(R.id.player)).check(matches(isDisplayed()))
-
-        //トップボタンをタップし、遷移状態を検証
-        onView(withId(R.id.player_btn_stand)).perform(click())
-        onView(withId(R.id.result_btn_top)).perform(click())
-        onView(withId(R.id.top)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun navigationTransitionOnBack() {
-
-        //説明画面からバックキーをタップし、遷移状態を検証
-        onView(withId(R.id.top_btn_explnation)).perform(click())
-        pressBack()
-        onView(withId(R.id.top)).check(matches(isDisplayed()))
-
-        //プレイヤー画面からバックキーをタップし、遷移状態を検証
-        onView(withId(R.id.top_btn_explnation)).perform(click())
-        onView(withId(R.id.explanation_btn_fight)).perform(click())
-        pressBack()
-        onView(withId(R.id.explanation)).check(matches(isDisplayed()))
-
-        //結果画面からバックキーをタップし、遷移状態を検証
-        onView(withId(R.id.explanation_btn_fight)).perform(click())
-        onView(withId(R.id.player_btn_stand)).perform(click())
-        pressBack()
-    }
-
-    @Test
-    fun displayResult() {
-
-        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
-
-        //PlayerFragmentにTestNavHostControllerを割り当て
-        launchFragmentInContainer<PlayerFragment>().onFragment { playFragment ->
-            navController.setGraph(R.navigation.nav_graph)
-            navController.setCurrentDestination(R.id.playerFragment)
-            Navigation.setViewNavController(playFragment.requireView(), navController)
+    @Before
+    fun setUp() {
+        context = InstrumentationRegistry.getInstrumentation().targetContext
+        viewModel = ViewModelProvider.NewInstanceFactory().create(TotalViewModel::class.java)
         }
 
-        //スタンドボタンをタップ
-        onView(withId(R.id.player_btn_stand)).perform(click())
+    //画面遷移
+    @Test
+    fun navigation() {
+        composeTestRule.setContent {
+            NavigationTop()
+        }
 
-        //引数を受け取り、ResultFragment起動
-        val currentDestinationArg = navController.backStack.last().arguments
-        launchFragmentInContainer<ResultFragment>(currentDestinationArg)
+        //起動時
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.top_overview)
+        ).assertExists()
 
-        //TextViewのテキストを検証
-        onView(withId(R.id.result_tv_player)).check(matches(
-            withText("プレイヤーのあなたの合計値：${currentDestinationArg?.getInt("totalPlayer")}")))
-        onView(withId(R.id.result_tv_dealer)).check(matches(
-            withText("ディーラーさんの合計値：${currentDestinationArg?.getInt("totalDealer")}")))
+        // Top から Explanation への遷移
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.top_btn_explanation)
+        ).performClick()
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.explanation_rule)
+        ).assertExists()
+
+        // Explanation から Player への遷移
+        //player_situation1は通らない？
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.explanation_btn_fight)
+        ).performClick()
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.player_situation3)
+        ).assertExists()
+
+        // Player から Result への遷移
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.player_btn_stand)
+        ).performClick()
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.result_situation1)
+        ).assertExists()
+
+        // Result から Player への遷移
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.result_btn_again)
+        ).performClick()
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.player_situation1)
+        ).assertExists()
+
+        // Result から Top への遷移
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.player_btn_stand)
+        ).performClick()
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.result_btn_top)
+        ).performClick()
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.top_overview)
+        ).assertExists()
+    }
+
+    //最初の2枚の合計値が表示されたか
+    @Test
+    fun initialCardsDisplayed() {
+        composeTestRule.setContent {
+            Player({},viewModel)
+        }
+        val total = viewModel.total.value!!
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.player_situation2) + "$total"
+        ).assertExists()
+    }
+
+    //最初の2枚で合計値21の場合、結果画面へ遷移されるか
+    //今回はスタンドボタンをタップできないでエラーになればテスト合格
+    @Test
+    fun navigatesWhenTotalOver21() {
+        composeTestRule.setContent {
+            NavigationTop()
+        }
+        for(i in 1..110) {
+
+            //結果画面へ遷移
+            composeTestRule.onNodeWithText(
+                context.getString(com.ui.R.string.top_btn_explanation)
+            ).performClick()
+            composeTestRule.onNodeWithText(
+                context.getString(com.ui.R.string.explanation_btn_fight)
+            ).performClick()
+            composeTestRule.onNodeWithText(
+                context.getString(com.ui.R.string.player_btn_stand)
+            ).performClick()
+            composeTestRule.onNodeWithText(
+                context.getString(com.ui.R.string.result_btn_top)
+            ).performClick()
+        }
+    }
+
+    //ヒットボタンをタップした場合、スナックバーが表示されるか
+    @Test
+    fun snackBarDisplayed() {
+        composeTestRule.setContent {
+            Player({},viewModel)
+        }
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.player_btn_hit)
+        ).performClick()
+        composeTestRule.onNodeWithText(
+            context.getString(com.ui.R.string.player_selection_hit)
+        ).assertExists()
     }
 }
